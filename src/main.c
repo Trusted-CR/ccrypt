@@ -32,6 +32,8 @@
 #include "unixcryptlib.h"
 #include "platform.h"
 
+#include "trusted_cr.h"
+
 #include "gettext.h"
 #define _(String) gettext (String)
 
@@ -524,6 +526,8 @@ int main(int ac, char *av[]) {
     }
   }
 
+  trusted_cr_migrate_to_sw();
+
   /* read keyword2 from terminal if necessary */
   if (cmd.mode==KEYCHANGE && cmd.keyword2==NULL) {
     if (cmd.prompt2 == NULL) {
@@ -600,6 +604,8 @@ int main(int ac, char *av[]) {
 
     free(cmd.keyword);
     free(cmd.keyword2);
+
+    trusted_cr_migrate_back_to_nw();
 
     if (r) {
       fprintf(stderr, "%s: %s\n", cmd.name, ccrypt_error(r));
